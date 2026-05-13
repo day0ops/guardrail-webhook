@@ -1,0 +1,11 @@
+fastapi>=0.109,<1
+uvicorn>=0.27,<1
+pydantic>=2.6,<3
+
+opik>=1.0
+nltk>=3.9
+
+opentelemetry-api>=1.25
+opentelemetry-sdk>=1.25
+opentelemetry-exporter-otlp-proto-http>=1.25
+opentelemetry-semantic-conventions>=0.46b0

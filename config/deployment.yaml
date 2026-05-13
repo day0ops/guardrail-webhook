@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opik-guardrail-webhook
+  namespace: agentgateway-system
+  labels:
+    app.kubernetes.io/managed-by: agentgateway-demo
+    agentgateway.dev/feature: guardrail-webhook
+    app: opik-guardrail
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opik-guardrail-webhook
+  template:
+    metadata:
+      labels:
+        app: opik-guardrail-webhook
+    spec:
+      serviceAccountName: opik-guardrail
+      containers:
+        - name: webhook
+          image: opik-guardrail-webhook:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: OPIK_PROJECT_NAME
+              value: agentgateway-guardrails
+            - name: OPIK_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: opik-secret
+                  key: api-key
+                  optional: true
+          resources:
+            requests:
+              memory: '128Mi'
+              cpu: '100m'
+            limits:
+              memory: '256Mi'
+              cpu: '200m'
+          readinessProbe:
+            httpGet:
+              path: /docs
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /docs
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 30
