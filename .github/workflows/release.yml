@@ -25,6 +25,7 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
+          token_format: 'access_token'
 
       - uses: docker/setup-qemu-action@v4
 
@@ -34,7 +35,7 @@ jobs:
         with:
           registry: australia-southeast1-docker.pkg.dev
           username: oauth2accesstoken
-          password: ${{ steps.auth.outputs.auth_token }}
+          password: ${{ steps.auth.outputs.access_token }}
 
       - uses: docker/metadata-action@v6
         id: meta
